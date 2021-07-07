@@ -1,57 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+import React, {useState} from 'react';
+import Navbar from './features/navbar/Navbar';
+import Products from './features/products/Products.js';
+import {Switch, Route, BrowserRouter, Redirect} from 'react-router-dom';
+import ProductModal from './features/modals/ProductModal.js';
+import CreateProductCardModal from './features/modals/CreateProductCardModal.js';
+import Payment from './features/modals/PaymentModal.js';
+
+
+
 
 function App() {
+  const [userInput, setUserInput] = useState('')
+  function changeUserInput(e) {
+      setUserInput(e.target.value)
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Navbar userInput={userInput} onChangedUserInput={changeUserInput}/>
+      <Products filter={userInput}/>
+      <Switch>
+        <Route exact path='/product/:id/pay'>
+          <Payment/>
+        </Route>
+        <Route exact path='/product/:id'>
+          <ProductModal/>
+        </Route>
+        <Route exact path='/createCard'>
+          <CreateProductCardModal/>
+        </Route>
+        <Redirect to='/'/>
+      </Switch>
+    </BrowserRouter>
+    
   );
 }
 
