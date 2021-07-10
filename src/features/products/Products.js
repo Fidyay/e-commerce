@@ -1,9 +1,22 @@
-import {useSelector} from 'react-redux'
+import {useSelector, useDispatch} from 'react-redux'
 import {Link} from 'react-router-dom'
 import NoImg from '../../images/no-img.png'
+import { addCards } from './productsSlice.js'
+import { useContext } from 'react'
+import { Context } from '../../index.js'
 
 
 const Products = ({filter}) => {
+    const dispatch = useDispatch()
+    const {firestore} = useContext(Context)
+    firestore.collection('products').onSnapshot(querySnapshot => {
+        const entities = []
+        querySnapshot.forEach((doc) => {
+            entities.push(doc.data());
+        })
+        dispatch(addCards(entities))
+    })
+
     const products = useSelector(state => state)
     const filteredProducts = products.ids.map(id => {
         const product = products.entities[id]

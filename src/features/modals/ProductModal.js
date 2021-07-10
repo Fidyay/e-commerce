@@ -1,15 +1,17 @@
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector} from 'react-redux'
 import { Redirect, useHistory, useParams, Link } from "react-router-dom"
-import { addComment } from '../products/productsSlice.js'
 import UserPhoto from '../../images/user.svg'
-import { useState } from 'react'
+import { useState, useContext } from 'react'
+import {useAuthState} from 'react-firebase-hooks/auth'
+import { Context } from "../../index.js"
 
 const ProductModal = () => {
+    const {auth, firestore} = useContext(Context)
+    const [user] = useAuthState(auth)
     const params = useParams()
     const [commentText, setCommentText] = useState('')
     const product = useSelector(state => state.entities[params.id])
     const history = useHistory()
-    const dispatch = useDispatch()
     if (!product) {
         return <Redirect to='/'/>
     }
@@ -47,15 +49,21 @@ const ProductModal = () => {
                                     }}/>
                                 <button type="button" className="btn btn-primary" onClick={() => {
                                     if (!commentText) return
-                                    const comments = [...product.comments, {photo: UserPhoto, author: 'Name', text: commentText}]
-                                    dispatch(addComment({
+                                    const newComment = {
+                                        photo: user ? user.photoURL : UserPhoto,
+                                        author: user ? user.displayName : 'Guest',
+                                        text: commentText
+                                    }
+                                    const comments = [...product.comments, newComment]
+                                    
+                                    firestore.collection('products').doc(product.id).set({
                                         id: product.id,
                                         title: product.title,
                                         info: product.info,
                                         img: product.img,
                                         price: product.price,
                                         comments
-                                        }))
+                                        })
                                         setCommentText('')
                                 }}>Add comment</button>
                             </div>

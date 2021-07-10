@@ -1,10 +1,15 @@
-import { useState } from "react"
-import { addCard } from "../products/productsSlice.js"
+import { useState, useContext } from "react"
 import { useHistory } from "react-router-dom"
 import { useDispatch } from 'react-redux'
+import {useAuthState} from 'react-firebase-hooks/auth'
+import { Context } from "../../index.js"
 import { nanoid } from "@reduxjs/toolkit"
 
+
 const CreateProductCardModal = () => {
+  const {auth, firestore} = useContext(Context)
+  const [user] = useAuthState(auth)
+
     const [img, setImg] = useState('')
     const [title, setTitle] = useState('')
     const [info, setInfo] = useState('')
@@ -48,13 +53,21 @@ const CreateProductCardModal = () => {
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-primary" onClick={() =>{
+                  const id = nanoid()
                   if (title && info && price && img) {
-                    dispatch(addCard({title, info, price, img, id: nanoid(), comments: []}))
+                    firestore.collection('products').doc(id).set({
+                      title, info, price, id, img, comments: []
+                    }).catch((error) => {
+                      console.error("Error writing document: ", error);
+                  });
+
                     history.push('/')
                     return
                   }
                   setSubmit(true)
-                  }}>Submit</button>
+                  }}
+                  disabled={user ? false : true}
+                  >Submit</button>
               </div>
             </div>
           </div>
