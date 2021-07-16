@@ -12,7 +12,7 @@ import Loader from './features/loader/Loader.js';
 
 function App() {
   const {auth} = useContext(Context)
-  const [user, loading] = useAuthState(auth)
+  const [, loading] = useAuthState(auth)
 
   const [userInput, setUserInput] = useState('')
   function changeUserInput(e) {

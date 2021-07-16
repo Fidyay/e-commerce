@@ -10,11 +10,13 @@ const productsSlice = createSlice({
     name: 'products',
     initialState,
     reducers: {
-        addCards: productsAdapter.setAll,
+        addCards: productsAdapter.addMany,
+        addImages: productsAdapter.updateMany,
+        addComments: productsAdapter.updateMany
     }
 })
 
 
 export default productsSlice.reducer
 
-export const {addCards} = productsSlice.actions
+export const {addCards, addImages, addComments} = productsSlice.actions

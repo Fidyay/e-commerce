@@ -56,12 +56,8 @@ const ProductModal = () => {
                                     }
                                     const comments = [...product.comments, newComment]
                                     
-                                    firestore.collection('products').doc(product.id).set({
+                                    firestore.collection('comments').doc(product.id).set({
                                         id: product.id,
-                                        title: product.title,
-                                        info: product.info,
-                                        img: product.img,
-                                        price: product.price,
                                         comments
                                         })
                                         setCommentText('')

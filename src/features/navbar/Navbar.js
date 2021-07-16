@@ -25,12 +25,12 @@ const Navbar = ({userInput, onChangedUserInput}) => {
 
     return (
         <header className="navbar navbar-light container-fluid d-flex" style={{backgroundColor: '#e3f2fd'}}>
-            <h1 className="navbar-brand">E-Commerce - all products here are fake</h1>
+            <h1 className="navbar-brand">E-Commerce</h1>
             <div className="d-flex search-and-login">
                 <div className="search me-3">
                     <input type="text" placeholder="Search" aria-label="Search" value={userInput} onChange={onChangedUserInput} onKeyDown={blur}/>
                 </div>
-                <button onClick={user ? createCard : login} className="btn btn-outline-success" type="submit">{user ? 'Create product card' : 'Login'}</button>
+                <button onClick={user ? createCard : login} className="btn btn-outline-success" type="submit">{user ? 'Product card' : 'Login'}</button>
             </div>                
         </header>
     )

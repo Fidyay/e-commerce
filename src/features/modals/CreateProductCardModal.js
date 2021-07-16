@@ -1,6 +1,5 @@
 import { useState, useContext } from "react"
 import { useHistory } from "react-router-dom"
-import { useDispatch } from 'react-redux'
 import {useAuthState} from 'react-firebase-hooks/auth'
 import { Context } from "../../index.js"
 import { nanoid } from "@reduxjs/toolkit"
@@ -16,9 +15,8 @@ const CreateProductCardModal = () => {
     const [price, setPrice] = useState('')
     const [clickedSubmit, setSubmit] = useState(false)
     const history = useHistory()
-    const dispatch = useDispatch()
-    return (
-              
+
+    return (              
         <div className="modal" tabIndex="-1">
           <div className="modal-dialog">
             <div className="modal-content">
@@ -56,11 +54,15 @@ const CreateProductCardModal = () => {
                   const id = nanoid()
                   if (title && info && price && img) {
                     firestore.collection('products').doc(id).set({
-                      title, info, price, id, img, comments: []
+                      title, info, price, id, comments: []
                     }).catch((error) => {
                       console.error("Error writing document: ", error);
                   });
-
+                  firestore.collection('productImgs').doc(id).set({
+                      id, img
+                    }).catch((error) => {
+                      console.error("Error writing document: ", error);
+                  });
                     history.push('/')
                     return
                   }
@@ -72,7 +74,6 @@ const CreateProductCardModal = () => {
             </div>
           </div>
         </div>
-
     )
 }
 
